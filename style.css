@@ -1,0 +1,127 @@
+:root {
+    --primary-color: #004d99;
+    --secondary-color: #e6f2ff;
+    --font-color: #333;
+    --border-color: #ddd;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: var(--font-color);
+}
+
+.app-header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 5px var(--shadow-color);
+}
+
+.invoice-container {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px var(--shadow-color);
+}
+
+h1, h2, h3 {
+    color: var(--primary-color);
+}
+
+section {
+    margin-bottom: 25px;
+    padding: 20px;
+    background-color: var(--secondary-color);
+    border-radius: 6px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.input-group input, #discount {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.itemized-list table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.itemized-list th, .itemized-list td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.itemized-list th {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.item-row input {
+    width: 90%;
+}
+
+.item-row .total-cell {
+    font-weight: bold;
+}
+
+#addItemBtn, #createInvoiceBtn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+#addItemBtn {
+    background-color: #6c757d;
+    color: white;
+}
+
+#createInvoiceBtn {
+    background-color: #28a745;
+    color: white;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.totals-section {
+    text-align: right;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.final-total {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: var(--primary-color);
+}

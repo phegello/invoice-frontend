@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Invoice</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="app-header">
+        <h1>Invoice Creator</h1>
+    </header>
+
+    <main class="invoice-container">
+        <form id="invoiceForm">
+
+            <section class="invoice-details">
+                <h2>Client and Invoice Details</h2>
+                <div class="input-group">
+                    <label for="clientName">Client Name:</label>
+                    <input type="text" id="clientName" required>
+                </div>
+                <div class="input-group">
+                    <label for="clientEmail">Client Email:</label>
+                    <input type="email" id="clientEmail" required>
+                </div>
+                <div class="input-group">
+                    <label for="invoiceNumber">Invoice #:</label>
+                    <input type="text" id="invoiceNumber" required>
+                </div>
+                <div class="input-group">
+                    <label for="invoiceDate">Date:</label>
+                    <input type="date" id="invoiceDate" value="" required>
+                </div>
+            </section>
+
+            <section class="itemized-list">
+                <h2>Itemized Services</h2>
+                <table id="itemsTable">
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th>Unit Price (R)</th>
+                            <th>Quantity</th>
+                            <th>Total (R)</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="invoiceItems">
+                        </tbody>
+                </table>
+                <button type="button" id="addItemBtn">Add Item</button>
+            </section>
+
+            <section class="totals-section">
+                <div class="total-row">
+                    <span>Subtotal:</span>
+                    <span id="subtotal">R 0.00</span>
+                </div>
+                <div class="total-row">
+                    <span>Discount:</span>
+                    <input type="number" id="discount" value="0" min="0">
+                </div>
+                <div class="total-row final-total">
+                    <span>Total:</span>
+                    <span id="finalTotal">R 0.00</span>
+                </div>
+            </section>
+
+            <section class="bank-details">
+                <h3>Banking Details</h3>
+                <p><strong>Bank:</strong> FNB</p>
+                <p><strong>Account Number:</strong> 63005576410</p>
+                <p><strong>Branch Code:</strong> 250655</p>
+            </section>
+
+            <button type="submit" id="createInvoiceBtn">Create & Send Invoice</button>
+        </form>
+    </main>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
