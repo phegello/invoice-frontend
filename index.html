@@ -18,6 +18,10 @@
             <section class="invoice-details">
                 <h2>Client and Invoice Details</h2>
                 <div class="input-group">
+                    <label for="businessName">Business Name:</label>
+                    <input type="text" id="businessName" required>
+                </div>
+                <div class="input-group">
                     <label for="clientName">Client Name:</label>
                     <input type="text" id="clientName" required>
                 </div>
@@ -43,7 +47,7 @@
                             <th>Description</th>
                             <th>Unit Price (R)</th>
                             <th>Quantity</th>
-                            <th>Total (R)</th>
+                            <th>Discount</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -62,17 +66,18 @@
                     <span>Discount:</span>
                     <input type="number" id="discount" value="0" min="0">
                 </div>
+                <div class="total-row">
+                    <span>VAT (15%):</span>
+                    <input type="number" id="vat" value="0" min="0">
+                </div>
+                <div class="total-row">
+                    <span>Post:</span>
+                    <input type="number" id="post" value="0" min="0">
+                </div>
                 <div class="total-row final-total">
                     <span>Total:</span>
                     <span id="finalTotal">R 0.00</span>
                 </div>
-            </section>
-
-            <section class="bank-details">
-                <h3>Banking Details</h3>
-                <p><strong>Bank:</strong> FNB</p>
-                <p><strong>Account Number:</strong> 63005576410</p>
-                <p><strong>Branch Code:</strong> 250655</p>
             </section>
 
             <button type="submit" id="createInvoiceBtn">Create & Send Invoice</button>

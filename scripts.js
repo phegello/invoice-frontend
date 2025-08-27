@@ -1,108 +1,126 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const invoiceForm = document.getElementById('invoiceForm');
     const invoiceItems = document.getElementById('invoiceItems');
     const addItemBtn = document.getElementById('addItemBtn');
-    const invoiceForm = document.getElementById('invoiceForm');
     const subtotalDisplay = document.getElementById('subtotal');
     const discountInput = document.getElementById('discount');
+    const vatInput = document.getElementById('vat');
+    const postInput = document.getElementById('post');
     const finalTotalDisplay = document.getElementById('finalTotal');
+    const invoiceDateInput = document.getElementById('invoiceDate');
 
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('invoiceDate').value = today;
+    // Set today's date as the default
+    const today = new Date();
+    const formattedDate = today.toISOString().split('T')[0];
+    invoiceDateInput.value = formattedDate;
 
-    // The updateTotals function is moved here
-    const updateTotals = () => {
+    // A counter to keep track of item rows
+    let itemCounter = 0;
+
+    // Function to add a new item row to the table
+    const addNewItem = () => {
+        itemCounter++;
+        const newRow = document.createElement('tr');
+        newRow.className = 'item-row';
+        newRow.dataset.itemId = itemCounter;
+
+        newRow.innerHTML = `
+            <td><input type="text" class="item-description" placeholder="Description"></td>
+            <td><input type="number" class="item-price" placeholder="Price" min="0" step="0.01"></td>
+            <td><input type="number" class="item-quantity" placeholder="Qty" value="1" min="1"></td>
+            <td><input type="number" class="item-discount" placeholder="Discount" value="0" min="0"></td>
+            <td><button type="button" class="removeItemBtn" data-item-id="${itemCounter}">Remove</button></td>
+        `;
+
+        invoiceItems.appendChild(newRow);
+    };
+
+    // Calculate totals whenever an input changes
+    const calculateTotals = () => {
         let subtotal = 0;
-        document.querySelectorAll('.item-row').forEach(row => {
-            const totalText = row.querySelector('.total-cell').textContent;
-            subtotal += parseFloat(totalText.replace('R ', '')) || 0;
+        const allItems = invoiceItems.querySelectorAll('.item-row');
+
+        allItems.forEach(item => {
+            const price = parseFloat(item.querySelector('.item-price').value) || 0;
+            const quantity = parseInt(item.querySelector('.item-quantity').value) || 0;
+            const itemDiscount = parseFloat(item.querySelector('.item-discount').value) || 0;
+            subtotal += (price * quantity) - itemDiscount;
         });
 
-        const discount = parseFloat(discountInput.value) || 0;
-        const finalTotal = subtotal - discount;
+        const overallDiscount = parseFloat(discountInput.value) || 0;
+        const vat = parseFloat(vatInput.value) || 0;
+        const post = parseFloat(postInput.value) || 0;
+        const total = subtotal - overallDiscount + vat + post;
 
         subtotalDisplay.textContent = `R ${subtotal.toFixed(2)}`;
-        finalTotalDisplay.textContent = `R ${finalTotal.toFixed(2)}`;
+        finalTotalDisplay.textContent = `R ${total.toFixed(2)}`;
     };
 
-    const addNewItemRow = () => {
-        const row = document.createElement('tr');
-        row.className = 'item-row';
-        row.innerHTML = `
-            <td><input type="text" class="item-description" required></td>
-            <td><input type="number" class="item-price" min="0" step="0.01" value="0" required></td>
-            <td><input type="number" class="item-qty" min="1" value="1" required></td>
-            <td class="total-cell">R 0.00</td>
-            <td><button type="button" class="remove-item-btn">X</button></td>
-        `;
-        invoiceItems.appendChild(row);
-    };
+    // Event listeners
+    addItemBtn.addEventListener('click', addNewItem);
+    invoiceItems.addEventListener('input', calculateTotals);
+    discountInput.addEventListener('input', calculateTotals);
+    vatInput.addEventListener('input', calculateTotals);
+    postInput.addEventListener('input', calculateTotals);
 
-    addNewItemRow();
+    // Initial item row
+    addNewItem();
 
-    addItemBtn.addEventListener('click', addNewItemRow);
-
-    invoiceItems.addEventListener('click', (e) => {
-        if (e.target.classList.contains('remove-item-btn')) {
-            e.target.closest('tr').remove();
-            updateTotals();
-        }
-    });
-
-    invoiceItems.addEventListener('input', (e) => {
-        if (e.target.classList.contains('item-price') || e.target.classList.contains('item-qty')) {
-            const row = e.target.closest('tr');
-            const price = parseFloat(row.querySelector('.item-price').value) || 0;
-            const qty = parseInt(row.querySelector('.item-qty').value) || 0;
-            const total = price * qty;
-            row.querySelector('.total-cell').textContent = `R ${total.toFixed(2)}`;
-            updateTotals();
-        }
-    });
-
-    discountInput.addEventListener('input', updateTotals);
-
+    // Handle form submission
     invoiceForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        
-        const invoiceData = {
-            clientName: document.getElementById('clientName').value,
-            clientEmail: document.getElementById('clientEmail').value,
-            invoiceNumber: document.getElementById('invoiceNumber').value,
-            invoiceDate: document.getElementById('invoiceDate').value,
-            items: [],
-            subtotal: parseFloat(subtotalDisplay.textContent.replace('R ', '')),
-            discount: parseFloat(discountInput.value),
-            total: parseFloat(finalTotalDisplay.textContent.replace('R ', ''))
-        };
 
-        document.querySelectorAll('.item-row').forEach(row => {
-            invoiceData.items.push({
-                description: row.querySelector('.item-description').value,
-                price: parseFloat(row.querySelector('.item-price').value),
-                quantity: parseInt(row.querySelector('.item-qty').value)
+        const items = [];
+        invoiceItems.querySelectorAll('.item-row').forEach(item => {
+            items.push({
+                description: item.querySelector('.item-description').value,
+                price: parseFloat(item.querySelector('.item-price').value),
+                quantity: parseInt(item.querySelector('.item-quantity').value),
+                itemDiscount: parseFloat(item.querySelector('.item-discount').value)
             });
         });
 
+        const invoiceData = {
+            invoiceNumber: document.getElementById('invoiceNumber').value,
+            invoiceDate: document.getElementById('invoiceDate').value,
+            clientName: document.getElementById('clientName').value,
+            businessName: document.getElementById('businessName').value,
+            clientEmail: document.getElementById('clientEmail').value,
+            subtotal: parseFloat(subtotalDisplay.textContent.replace('R ', '')),
+            discount: parseFloat(discountInput.value),
+            vat: parseFloat(vatInput.value),
+            post: parseFloat(postInput.value),
+            total: parseFloat(finalTotalDisplay.textContent.replace('R ', '')),
+            items: items
+        };
+
         try {
-            const response = await fetch('http://localhost:3000/api/create-invoice', {
+            const response = await fetch('https://https://zany-eden-karabomagabe213-bdf3bb65.koyeb.app/api/create-invoice', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(invoiceData)
+                body: JSON.stringify(invoiceData),
             });
 
+            const data = await response.json();
             if (response.ok) {
-                const result = await response.json();
-                alert(result.message);
-                invoiceForm.reset();
+                alert('Invoice created and sent successfully!');
             } else {
-                const error = await response.json();
-                alert(`Error: ${error.error}`);
+                alert(`Error: ${data.error || 'Failed to create and send invoice.'}`);
             }
         } catch (error) {
             console.error('Error:', error);
             alert('Failed to connect to the server. Please ensure the backend is running.');
+        }
+    });
+
+    // Handle remove item button clicks
+    invoiceItems.addEventListener('click', (e) => {
+        if (e.target.classList.contains('removeItemBtn')) {
+            const row = e.target.closest('.item-row');
+            row.remove();
+            calculateTotals();
         }
     });
 });

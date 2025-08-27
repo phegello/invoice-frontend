@@ -52,7 +52,7 @@ section {
     font-weight: bold;
 }
 
-.input-group input, #discount {
+.input-group input, #discount, #vat, #post {
     width: 100%;
     padding: 10px;
     border: 1px solid var(--border-color);
@@ -79,10 +79,6 @@ section {
 
 .item-row input {
     width: 90%;
-}
-
-.item-row .total-cell {
-    font-weight: bold;
 }
 
 #addItemBtn, #createInvoiceBtn {
